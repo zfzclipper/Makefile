@@ -1,0 +1,144 @@
+Preface:
+Xiii: makefile templates(a kind of wrapper), genmakefile, imake
+
+=============
+| Chapter 1 |
+=============
+OUTLINE: targets, prerequisites, syntax
+
+3: 
+advantage of make over script: specify the relationships between the elements of your program.
+relationship, timestamp
+
+4:
+typically, the default goal of makefile is to build a program
+the specification file/makefile, describes the relationship between the source, intermediate, and executable program files.
+minimum amount of work performed to update executable
+
+default rule.
+a rule consists of 3 parts: (1)the target, (2)its prerequisites/dependents, and (3)the commands
+target: prereq1 prereq2 ...
+	commands
+
+targets: the files or things that must be made.
+prerequisites/dependents: those files that must exist before the target can be created.
+commands: shell commands that will create the target from the prerequisites/dependents.
+
+5:
+rule evaluation process of make:
+(1)Find the files indicated by prerequisites and targets;
+(2)If any prerequisite has an associated rule, make attempt to update those first;
+(3)If any prerequisite is newer than the target, the target is remade by executing the commands.
+(4)If any of the commands generates an error, the building of the target is terminated, and make exits.
+
+6:
+top-down structure style: usually the most general form of target is specified first, and the details are left for later.
+Underlying support mechanism of make: (1)Two-phase Execution Model, (2)Recursive Variables.
+
+Dependency Checking:
+If the command line contains no targets, make decides to make the default goal.
+The chaining of targets to prerequisites to targets to prerequisites.
+GNU make includes special support for -l<NAME> syntax.
+	make search for a file of form libNAME.so; if no match is found, it then searches for libNAME.a
+
+7:
+Assumption of previous examples:
+(1)All the project source code, and the make description file are stored in a single directory.
+(2)The make description file is called makefile, Makefile, or GNUMakefile.
+(3)The makefile resides in the user's current directory when executing the make command.
+
+8:
+make automatically creates the FIRST target it sees.
+To update a different target, or more than one target, the target name(s) should be included in the command line.
+After the target is created or updated, make moves on to the NEXT target, or EXITs.
+
+Make command-line options:
+(1)--just-print(or -n), to display the commands it would execute for a particular target without actually executing them.
+(2)It is possible to set almost any makefile variable on the command line to override the default value or the value set in the makefile.
+
+Makefiles are usually structured top-down, so that the most general target (often called "all") is updated by default.
+More and more detailed targets follow with targets for program maintenance.
+Targets do not have to be actual files, any name will do.
+
+9:
+Basic Makefile Syntax:
+One or more targets can appear to the left of the colon.
+Zero or more prerequisites can appear to the right of the colon. 
+	If no prerequisites are listed to the right, then only the target(s) that do not exist are updated.
+
+Each command must begin with a tab character.
+	The characters that follow the tab are to be passed to a subshell for execution.
+
+The comment character for make is hash/pound sign, #.
+All text from the pound sign to the end of line is ignored.
+Comments can be indented and leading whitespace is ignored.
+The comment character DOES NOT introduce a make comment in the text of command scripts.
+
+long lines can be continued using the standard Unix escape character backslash (\). 
+It is common for commands to be continued in this way. It is also common for lists of prerequisites to be continued with backslash. 
+
+
+=============
+| Chapter 2 |
+=============
+10: 
+
+Each rule defines a target, a file to be updated. 
+Each target file depends on a set of prerequisites, which are also files. 
+If any of the prerequisite files has been modified more recently than the target, the command script of the rule will be executed.
+The set of targets and prerequisites form a dependency graph. 
+Building and processing this dependency graph to update the requested target is what make is all about.
+
+Explicit Rules: indicate a specific target to be updated if it is out of date with respect to any of its prerequisites.
+Pattern Rules
+Implicit Rules
+Static Pattern Rules
+
+A rule can have more than one target.
+	This means that each target has the same set of prerequisites as the others.
+
+11:
+Explicit Rules:
+A rule does not have to be defined "all at once."
+Each time make sees a target file, it adds the target and prerequisites to the dependency graph.
+If a target has already been seen and exists in the graph, any additional prerequisites are appended to the target file entry.
+
+12:
+wildcard
+The tilde(~) character can be used to represent the current user's home directory.
+!!!!!!!!!!!caching of mp_make
+
+13:
+Wildcard expansion is performed by make when the pattern appears as a target or prerequisite.
+	make will expand the wildcards immediately upon reading the makefile.
+Wildcard expansion is performed by subshell when the pattern apperas in a command.
+	the shell of expand the wildcards in commands much later when the command is executed.
+
+Phony Targets: targets that do not represent files
+GNU make includes a special target, .PHONY, to tell make that a target is not a real life. 
+Any target can be declared phony by including it as a prerequisite of .PHONY
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
